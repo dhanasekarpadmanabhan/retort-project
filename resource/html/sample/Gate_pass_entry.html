@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Example Dynamic Form</title>
+        <script src="../../node_modules/vue/dist/vue.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+       <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+input[type="text"]
+{
+  width:100px;
+}
+
+</style>
+</head>
+<body>
+
+<div id="app" class="panel">
+  <div >
+
+      Enter the Gate Pass no
+      <input type="text" id="gpno">
+      Enter the Gate Pass Date
+      <input type="date" id="gpdate">
+      <div class="panel panel-info">
+                <div class="panel-heading">
+                  <h3 class="col-md-1">Sl.no</h3>
+                  <h3 class="col-md-2">Product_details</h3>
+                  <h3 class="col-md-1">Batch_no</h3>
+                <h3 class="col-md-1">Qty</h3>
+                <h3 class="col-md-1">  Rate</h3>
+                <h3 class="col-md-1">MRP</h3>
+              <h3 class="col-md-2">Mfg-Dt</h3>
+                <h3 class="col-md-2">Exp-dt</h3>
+                <h3 class="col-md-1">delete</h3>
+                  </div>
+<div class="panel-body" >
+      <div v-for="(row , index) in rows" style="height:100px">
+        <div class="col-md-1" v-model="row.slno">     {{ index +1}}</div>
+                <div class="col-md-2"><select style="width:190px;"v-model="row.product">
+                  <option disabled value="">Please select any field</option>
+<option v-for="option in object1" :value="option">{{option.DESCR+"  "+option.PCAPCTY+option.UMN}}</option>
+</select></div>
+
+              <div class="col-md-1"><input type="text" v-model="row.batch_no"></div>
+              <div class="col-md-1"><input type="text" v-model="row.qty"></div>
+              <div class="col-md-1"><input type="text" v-model="row.rate"></div>
+              <div class="col-md-1"><input type="text" v-model="row.mrp"></div>
+              <div class="col-md-2"><input type="date" v-model="row.mfg_dt"></div>
+              <div class="col-md-2"><input type="date" v-model="row.Exp_dt"></div>
+              <div class="col-md-1"><a v-on:click="removeElement(row);" style="cursor: pointer">Remove</a></div>
+<br></div>
+</div>
+  </div>
+            <div>
+        <button class="button btn-primary" @click="addRow" >Add row</button>
+        <button class="button btn-primary" @click="result">Result</button>
+            </div>
+            <div class="panel-default">
+            <p id="p1" class="panel-body"></p>
+          </div>
+</div>
+</div>
+<script type="text/javascript" >
+const {app,BrowserWindow,Menu,shell} = require('electron')
+const $ = require('jquery')
+var connection_db=require('../../js/database/dbConnection');
+var common_Value = require('../../js/sample/required_Value')
+var stock = require('../../js/sample/stock')
+var gatepassfunt=require('../../js/sample/gatepass')
+$( document ).ready(select1)
+function select1() {
+    allvalues = common_Value.select_imas();
+    allvalues.then(function(result) {
+          app1.object1 = result;
+    })
+}
+var app1 = new Vue({
+    el: "#app",
+    data: {
+        count: 1,
+        rows: [],
+        object1: []
+    },
+    methods: {
+        addRow: function() {
+            this.rows.push({});
+        },
+        removeElement: function(row) {
+            var index = this.rows.indexOf(row);
+            this.rows.splice(index, 1);
+        },
+        result: function() {
+            $("#p1").text('');
+            if (($("#gpno").val() == "" || $("#gpno").val() == undefined) || ($("#gpdate").val() == "" || $("#gpdate").val() == undefined)) {
+                $("#p1").text("gate pass details not defined")
+            } else {
+                var gatepass = {
+                    gpno: $("#gpno").val(),
+                    gpdate: $("#gpdate").val()
+                };
+                var gate = {
+                    entry: gatepass,
+                    values: this.rows
+                }
+                gatepassfunt.insertgate(gate)
+            }
+        }
+    }
+});
+
+</script>
+</body>
+
+
+</html>
