@@ -15,6 +15,7 @@ const $ = require('jquery')
 
 ipcMain.on('sample_Main', (event, arg) => {
     global.product = arg;
+    process.env.productindustry=arg
     functions.sampleWindow()
 })
 

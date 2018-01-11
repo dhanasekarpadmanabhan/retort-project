@@ -29,7 +29,6 @@ function samplecheck() {
     var industry = $("#industry").val()
     if ((name == "Admin") & (password == "1234a") & industry != (null || undefined)) {
         //ipcRenderer will communicate with main.js file of ipcMain of addwindow with value of 1
-        process.env.industry = industry
         ipcRenderer.send('sample_Main', industry)
     } else {
         console.log("not granted")

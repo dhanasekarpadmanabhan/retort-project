@@ -13,6 +13,7 @@ const {
 const $ = require('jquery')
 var dbConnection_sales = require('../js/database/dbConnection')
 var sample = require('../js/sample/samplewindow')
+var closing_stock=require('./sample/closing_stock.js')
 //win (1-10) for sales window
 let win //this is the signin window
 let win1
@@ -20,6 +21,7 @@ let win2
 let win4
 //win (10-20) for sample window creation
 let win10
+let win11
 /*
  *createWindow
  *will create a new broserwindow with size and load url of the first.html file
@@ -75,7 +77,7 @@ function secondWindow() {
     win1 = new BrowserWindow({
         width: 700,
         height: 650,
-        parent: win
+      //  parent: win
     })
     win1.loadURL(url.format({
         pathname: path.join(__dirname, '../html/sales/second.html'),
@@ -230,22 +232,22 @@ function quit() {
 //this template is for second.html window
 
 function sampleWindow() {
-    win = new BrowserWindow({
-        width: 700,
-        height: 650,
-        parent: win,
+    win11 = new BrowserWindow({
+        width: 900,
+        height: 860,
+      //  parent: win,
         icon: path.join(__dirname, '../assest/a.png')
     })
-    win.loadURL(url.format({
+    win11.loadURL(url.format({
         pathname: path.join(__dirname, '../html/sample/sample_main_page.html'),
         protocol: 'file:',
         slashes: true
     }))
     //this will set the menu for the particular window
     const mainWindowMenuBar = Menu.buildFromTemplate(sampleMenuTemplate);
-    win.setMenu(mainWindowMenuBar)
-    win.on('closed', () => {
-        win = app.quit();
+    win11.setMenu(mainWindowMenuBar)
+    win11.on('closed', () => {
+        win11 = '';
     })
 }
 const sampleMenuTemplate = [{
@@ -263,7 +265,8 @@ const sampleMenuTemplate = [{
     }, {
         label: 'Closing STOCK',
         click() {
-            console.log("state/district master")
+
+          sample_closing_stock()
         }
     }, {
         label: 'Gate Pass',
@@ -384,6 +387,19 @@ function Gate_pass_details() {
 function Gate_pass_entry() {
 
     sample.test(global.product);
+}
+
+function sample_closing_stock()
+{
+closing = new Promise(function(resolve, reject) {
+      resolve(closing_stock.sample_closing_stock())
+  });
+  //      j1 = selectquery(field,from,where,order,this);
+  //this will send the value to ipcRenderer with item:add of second.html file
+closing.then(function(result) {
+  console.log(result)
+    win11.webContents.send('stock:total', result);
+  })
 }
 //selectval will take value as argument to select whether this is 01-Pharmaceutical , 02-Laboratory , 03- k.c.corporation
 //willl first establish connection to the database of

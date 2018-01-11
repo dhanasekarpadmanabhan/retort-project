@@ -23,8 +23,7 @@ function period1(obj) {
         month1 = '0' + month;
     else {
         month1 = month
-
-    }
+  }
     var year = d.getFullYear();
     var preyear = (d.getFullYear() - 1).toString().substr(2, 2);
     var curyear = (d.getFullYear()).toString().substr(2, 2);
